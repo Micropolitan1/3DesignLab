@@ -1,0 +1,169 @@
+.sidebar {
+  width: 280px;
+  height: 100%;
+  background: #1a1a2e;
+  border-right: 1px solid #2d2d44;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  color: #e0e0e0;
+}
+
+.sidebar-section {
+  padding: 16px;
+  border-bottom: 1px solid #2d2d44;
+}
+
+.sidebar-section h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.sidebar-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.subtitle {
+  margin: 4px 0 0 0;
+  font-size: 11px;
+  color: #666;
+}
+
+.button-group {
+  display: flex;
+  gap: 4px;
+}
+
+.mode-button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #3d3d5c;
+  background: #252538;
+  color: #b0b0b0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+
+.mode-button:hover {
+  background: #303045;
+  border-color: #4a4a6a;
+  color: #ffffff;
+}
+
+.mode-button.active {
+  background: #4a9eff;
+  border-color: #4a9eff;
+  color: #ffffff;
+}
+
+.info-box {
+  background: #252538;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.info-row .label {
+  color: #888;
+}
+
+.info-row .value {
+  color: #fff;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 12px;
+}
+
+.muted {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+  font-style: italic;
+}
+
+.selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.selection-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #252538;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.face-badge {
+  background: #ffaa00;
+  color: #1a1a2e;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.clear-button {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ff6b6b;
+  background: transparent;
+  color: #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+
+.clear-button:hover {
+  background: #ff6b6b;
+  color: #1a1a2e;
+}
+
+.controls-help {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.control-item kbd {
+  background: #252538;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 11px;
+  color: #4a9eff;
+  min-width: 80px;
+  text-align: center;
+}
+
+.control-item span {
+  color: #888;
+}

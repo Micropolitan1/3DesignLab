@@ -1,6 +1,6 @@
 # 3DDesignLab — Product Specification
 
-> **Status:** Draft
+> **Status:** In Progress - Milestone 0.1 Complete
 > **Last Updated:** 2026-01-20
 > **Version:** 0.1.0
 
@@ -177,10 +177,10 @@ What "done" means:
 
 | Component | Technology | Status |
 |-----------|------------|--------|
-| Viewport | Three.js (WebGL) | Not started |
-| Camera controls | Three.js | Not started |
+| Viewport | Three.js (WebGL) | Done |
+| Camera controls | Three.js OrbitControls | Done |
 | Gizmos & snapping | Custom | Not started |
-| Picking & selection | BVH accelerated | Not started |
+| Picking & selection | BVH accelerated | Done |
 | Timeline UI | Custom | Not started |
 | Sketch UI | Custom | Not started |
 | Parameter/dial editor | Custom | Not started |
@@ -332,13 +332,23 @@ generator-package/
 
 #### Milestone 0.1: Browser Viewport + Selection Baseline
 **Confidence:** High
+**Status:** COMPLETE
 
-- [ ] Three.js viewport with orbit/pan/zoom
-- [ ] Load and render a mesh
-- [ ] Face/triangle picking with highlighting
+- [x] Three.js viewport with orbit/pan/zoom
+- [x] Load and render a mesh
+- [x] Face/triangle picking with highlighting
 
 **Notes:**
 ```
+2026-01-20: Completed initial implementation
+- Vite + React + TypeScript project scaffolding
+- Three.js viewport with OrbitControls (orbit, pan, zoom)
+- BVH-accelerated raycasting via three-mesh-bvh
+- Face-level hover highlighting (cyan) and selection highlighting (orange)
+- Multi-select with Shift+Click
+- Test geometry: cube, sphere, cylinder, torus
+- Zustand state management for selection
+- Sidebar showing hover info, selection list, and controls help
 ```
 
 #### Milestone 0.2: Mesh Pipeline Spike
