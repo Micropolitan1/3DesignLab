@@ -1,4 +1,5 @@
 import { useSceneStore, type SelectionMode } from '../store/sceneStore';
+import { CSGTestPanel } from './CSGTestPanel';
 import './Sidebar.css';
 
 export function Sidebar() {
@@ -20,8 +21,10 @@ export function Sidebar() {
     <div className="sidebar">
       <div className="sidebar-section">
         <h2>3DDesignLab</h2>
-        <p className="subtitle">Milestone 0.1 - Viewport &amp; Selection</p>
+        <p className="subtitle">Milestone 0.3 - CSG Engine Spike</p>
       </div>
+
+      <CSGTestPanel />
 
       <div className="sidebar-section">
         <h3>Selection Mode</h3>
