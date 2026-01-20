@@ -48,6 +48,8 @@ class ManifoldEngineClass {
       const start = performance.now();
 
       this.wasm = await Module();
+      // Setup must be called before using the module
+      this.wasm.setup();
 
       const duration = performance.now() - start;
       console.log(`[ManifoldEngine] WASM initialized in ${duration.toFixed(1)}ms`);
@@ -228,11 +230,11 @@ class ManifoldEngineClass {
     const wasm = this.ensureInitialized();
     const start = performance.now();
 
-    // Create a CrossSection from the 2D points
-    const crossSection = new wasm.CrossSection([points]);
+    // Create a CrossSection from the 2D points (with default Positive fill rule)
+    const crossSection = new wasm.CrossSection([points], 'Positive');
 
-    // Extrude along Z
-    const result = wasm.Manifold.extrude(crossSection, height, nDivisions);
+    // Extrude along Z - extrude is a method on CrossSection
+    const result = crossSection.extrude(height, nDivisions);
 
     this.recordMetric({
       operationName: 'extrude',
@@ -253,8 +255,9 @@ class ManifoldEngineClass {
     const wasm = this.ensureInitialized();
     const start = performance.now();
 
-    const crossSection = new wasm.CrossSection([points]);
-    const result = wasm.Manifold.revolve(crossSection, circularSegments);
+    const crossSection = new wasm.CrossSection([points], 'Positive');
+    // revolve is a method on CrossSection
+    const result = crossSection.revolve(circularSegments);
 
     this.recordMetric({
       operationName: 'revolve',
