@@ -16,6 +16,7 @@
 - [Development Plan](#development-plan)
 - [Confidence Assessment](#confidence-assessment)
 - [Notes & Decisions Log](#notes--decisions-log)
+- [Future: OpenSCAD Interoperability](#future-openscad-interoperability)
 
 ---
 
@@ -637,6 +638,7 @@ Use this section to track ongoing decisions, learnings, and changes to the plan.
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-01-20 | Created initial spec | Starting point for development |
+| 2026-01-20 | Research OpenSCAD interoperability | MakerWorld's Parametric Model Maker demonstrates viable browser-based parametric customization; OpenSCAD ecosystem offers thousands of existing models |
 | | | |
 
 ### Open Questions
@@ -645,6 +647,7 @@ Use this section to track ongoing decisions, learnings, and changes to the plan.
 - [ ] Server infrastructure approach if hybrid path needed?
 - [ ] Target browsers/devices for v1?
 - [ ] Hosting strategy for published generators?
+- [ ] OpenSCAD integration priority? (See Future: OpenSCAD Interoperability section)
 
 ### Technical Learnings
 
@@ -660,6 +663,345 @@ Use this section to track ongoing decisions, learnings, and changes to the plan.
 
 ---
 
+## Future: OpenSCAD Interoperability
+
+> **Status:** Research Notes (for future implementation)
+> **Last Updated:** 2026-01-20
+
+This section documents research into making 3DesignLab interoperable with OpenSCAD models, inspired by MakerWorld's Parametric Model Maker.
+
+### Overview: What is OpenSCAD?
+
+OpenSCAD is a script-based parametric CAD tool that uses code to define 3D models. Unlike traditional GUI-based CAD, OpenSCAD models are defined programmatically, making them inherently parametric and reproducible.
+
+**Key characteristics:**
+- Declarative/functional programming paradigm
+- CSG (Constructive Solid Geometry) based operations
+- Text-based `.scad` files that are version-control friendly
+- Strong community with thousands of customizable models on Thingiverse, Printables, and MakerWorld
+
+### Reference: MakerWorld's Parametric Model Maker
+
+MakerWorld (by Bambu Lab) has implemented a browser-based OpenSCAD customizer that serves as an excellent reference for what 3DesignLab could achieve.
+
+#### Version History & Capabilities
+
+| Version | Date | Key Features |
+|---------|------|--------------|
+| v0.6.0 | May 2024 | 50+ fonts, third-party libraries |
+| v0.7.0 | Jun 2024 | Extended font/library support, more OpenSCAD syntax |
+| v0.8.0 | Aug 2024 | File upload, multiple font additions |
+| v0.9.0 | Sep 2024 | **Multi-color model export** (3MF with color) |
+| v0.9.1 | Nov 2024 | Updated OpenSCAD & BOSL2 library |
+| v0.10.0 | Feb 2025 | **Multi-plate 3MF generation**, 3MF parameter customization |
+| v0.11.0 | May 2025 | Closed-source script support, printer selection (incl. H2D) |
+| v1.0.0 | Jun 2025 | **Fusion 360 (.f3d) file support** |
+| v1.1.0 | Oct 2025 | Complete UI redesign, new homepage/editor, Recent & Saved Models |
+
+#### Current Technical Stack (v1.1.0)
+
+- **OpenSCAD Version:** Based on commit `c8fbef05ba900e46892e9a44ea05f7d88e576e13`
+- **BOSL2 Library:** Version `99fcfc6867e739aa1cd8ffc49fe39276036681f1`
+- **Export Formats:** 3MF (with color, multi-plate), STL
+- **Input Formats:** `.scad` files, `.f3d` (Fusion 360)
+
+### Technical Implementation: OpenSCAD in Browser
+
+#### OpenSCAD-WASM Project
+
+The [openscad-wasm](https://github.com/openscad/openscad-wasm) project provides a WebAssembly port of OpenSCAD that enables browser execution.
+
+**Architecture:**
+```
+┌─────────────────────────────────────────────────┐
+│                   Main Thread                    │
+│  ┌───────────┐  ┌───────────┐  ┌─────────────┐ │
+│  │  UI/React │  │  Monaco   │  │ model-viewer│ │
+│  │ Components│  │  Editor   │  │  (Three.js) │ │
+│  └───────────┘  └───────────┘  └─────────────┘ │
+│         │              │               ▲        │
+│         ▼              ▼               │        │
+│  ┌─────────────────────────────────────┴──────┐ │
+│  │            Worker Communication            │ │
+│  └─────────────────────────────────────┬──────┘ │
+└────────────────────────────────────────│────────┘
+                                         │
+┌────────────────────────────────────────▼────────┐
+│                   Web Worker                     │
+│  ┌──────────────────────────────────────────┐  │
+│  │           openscad-wasm Module            │  │
+│  │  ┌────────────┐  ┌─────────────────────┐ │  │
+│  │  │ Emscripten │  │  Virtual Filesystem │ │  │
+│  │  │   WASM     │  │  (FS API)           │ │  │
+│  │  └────────────┘  └─────────────────────┘ │  │
+│  └──────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────┐  │
+│  │        Libraries (BOSL2, MCAD, etc.)      │  │
+│  └──────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────┘
+```
+
+**Key Implementation Details:**
+
+1. **ES6 Module Format:** Import as standard JavaScript module
+2. **Virtual Filesystem:** Emscripten's FS API for file I/O
+3. **Command-line Interface:** `instance.callMain()` with CLI-style arguments
+4. **Web Worker Isolation:** Prevents UI freezing during model generation
+5. **Manifold Backend:** `--enable=manifold` flag for faster rendering
+
+**Basic Usage Pattern:**
+```javascript
+import OpenSCAD from 'openscad-wasm';
+
+const instance = await OpenSCAD({ noInitialRun: true });
+
+// Write .scad file to virtual filesystem
+instance.FS.writeFile('/input.scad', scadCode);
+
+// Render to STL
+instance.callMain([
+  '/input.scad',
+  '-o', '/output.stl',
+  '--enable=manifold'
+]);
+
+// Read output
+const stlData = instance.FS.readFile('/output.stl');
+```
+
+### OpenSCAD Customizer Syntax
+
+OpenSCAD uses special comment annotations to define customizable parameters. This is the key to creating user-friendly parameter UIs.
+
+#### Parameter Declaration Syntax
+
+Parameters must appear **before the first module declaration** in the script:
+
+```openscad
+// Description of the parameter
+variable_name = default_value; // [constraints]
+```
+
+#### Widget Types
+
+| Widget | Syntax Example | Notes |
+|--------|----------------|-------|
+| **Slider** | `height = 50; // [10:100]` | min:max format |
+| **Stepped Slider** | `size = 20; // [0:5:100]` | min:step:max format |
+| **Dropdown (numbers)** | `count = 2; // [1, 2, 3, 4]` | Comma-separated values |
+| **Dropdown (strings)** | `style = "round"; // [round, square, hex]` | String options |
+| **Labeled Dropdown** | `size = "M"; // [S:Small, M:Medium, L:Large]` | value:label format |
+| **Checkbox** | `hollow = true;` | Boolean values |
+| **Text Input** | `label = "Hello";` | String without constraints |
+| **Spinbox** | `quantity = 5;` | Integer without range |
+
+#### Tab/Section Grouping
+
+```openscad
+/* [Dimensions] */
+width = 100;   // [10:200]
+height = 50;   // [10:100]
+depth = 30;    // [10:100]
+
+/* [Options] */
+rounded = true;
+wall_thickness = 2; // [1:0.5:5]
+
+/* [Hidden] */
+$fn = 32;  // Not shown in UI
+```
+
+#### Advanced Features
+
+```openscad
+// Conditional visibility (planned/experimental)
+// Parameters can be hidden based on other parameter values
+
+// Image-based parameters (v0.11.0+)
+// Some implementations support image uploads for texturing
+```
+
+### BOSL2 Library Capabilities
+
+[BOSL2](https://github.com/BelfrySCAD/BOSL2) (Belfry OpenSCAD Library v2.0) is the most comprehensive OpenSCAD library, included in MakerWorld.
+
+**Feature Categories:**
+
+| Category | Capabilities |
+|----------|--------------|
+| **Shapes** | Extended primitives (prisms, tubes, rounded shapes), 2D shapes |
+| **Attachments** | Anchoring system for connecting parts, alignment tools |
+| **Texturing** | Surface textures (knurling, patterns), image embossing |
+| **Parts** | Gears, threads (metric, UTS, pipe, bottle caps), hinges, joints |
+| **Math** | Linear algebra, equation solving, polynomial root finding |
+| **Geometry** | Line/circle intersections, coordinate transforms, Bézier curves |
+| **VNF** | Vertices-n-Faces manipulation for complex polyhedra |
+| **Skinning** | Lofting between profiles, sweep operations |
+
+### Multi-Color & 3MF Export
+
+**How it works in MakerWorld:**
+
+1. OpenSCAD's `color()` statement assigns colors to parts
+2. Development version of OpenSCAD supports 3MF export with color data
+3. Requires "lazy unions" feature enabled
+4. Each color becomes a separate object/material in the 3MF
+
+**Alternative approach (ColorSCAD):**
+- Post-process OpenSCAD output to AMF/3MF with color preservation
+- Maps preview (F5) colors to export format
+
+### Interoperability Strategy for 3DesignLab
+
+#### Option A: OpenSCAD Import (Read-Only)
+
+**Concept:** Import `.scad` files as read-only parametric generators in 3DesignLab.
+
+**Workflow:**
+1. User uploads `.scad` file
+2. 3DesignLab parses customizer annotations
+3. Generates dial UI from parameters
+4. Uses openscad-wasm to render preview/export
+
+**Pros:**
+- Leverages existing OpenSCAD ecosystem
+- Thousands of existing models become usable
+- Relatively simple to implement
+
+**Cons:**
+- No editing of the underlying model
+- Dependent on openscad-wasm performance/capabilities
+- Two different authoring paradigms
+
+#### Option B: OpenSCAD Export (Write-Only)
+
+**Concept:** Export 3DesignLab models as `.scad` files.
+
+**Workflow:**
+1. User creates model in 3DesignLab (visual timeline)
+2. Export generates equivalent OpenSCAD code
+3. Exported `.scad` is compatible with OpenSCAD ecosystem
+
+**Pros:**
+- Models become portable to OpenSCAD users
+- Can be shared on MakerWorld, Thingiverse, etc.
+- Preserves parametric nature
+
+**Cons:**
+- Complex mapping from B-rep/feature timeline to CSG
+- May not support all 3DesignLab features
+- Code generation quality varies
+
+#### Option C: Hybrid Bi-Directional
+
+**Concept:** Full interoperability with translation layer.
+
+**Implementation Complexity:** High
+
+**Would require:**
+- AST parser for OpenSCAD scripts
+- Mapping layer between CSG and B-rep operations
+- Lossless round-trip (probably impossible for complex models)
+
+#### Option D: Side-by-Side Runtime
+
+**Concept:** 3DesignLab player can load either native packages OR `.scad` files.
+
+**Workflow:**
+1. Generator runtime detects format
+2. Native packages use 3DesignLab engine
+3. `.scad` files use embedded openscad-wasm
+4. Unified dial UI for both
+
+**Pros:**
+- Clean separation of concerns
+- Best-of-both-worlds for users
+- Incremental implementation
+
+**Cons:**
+- Two rendering engines to maintain
+- Larger bundle size
+- Potential UX inconsistencies
+
+### Implementation Recommendations
+
+#### Phase 1: OpenSCAD Viewer/Customizer (Low Risk)
+
+- [ ] Integrate openscad-wasm as optional module
+- [ ] Parse customizer annotations to generate dial UI
+- [ ] Render preview using existing Three.js viewport
+- [ ] Export STL/3MF from openscad-wasm output
+
+**Estimated Complexity:** Medium
+**Dependencies:** openscad-wasm npm package, parameter parser
+
+#### Phase 2: Library Support (Medium Risk)
+
+- [ ] Bundle BOSL2 library with openscad-wasm
+- [ ] Add font support for text operations
+- [ ] Support `include` and `use` statements
+- [ ] Handle file dependencies (multi-file projects)
+
+**Estimated Complexity:** Medium-High
+**Dependencies:** Library packaging, virtual filesystem management
+
+#### Phase 3: Export to OpenSCAD (Higher Risk)
+
+- [ ] Implement code generator for basic features (primitives, extrude, boolean)
+- [ ] Map 3DesignLab parameters to customizer annotations
+- [ ] Handle sketch-to-polygon conversion
+- [ ] Document unsupported feature warnings
+
+**Estimated Complexity:** High
+**Dependencies:** Robust feature-to-CSG mapping
+
+### Technical Considerations
+
+#### Performance
+
+| Operation | Browser Constraint | Mitigation |
+|-----------|-------------------|------------|
+| Complex models | Can freeze browser | Web Worker isolation |
+| Large renders | Memory limits | Progressive rendering, LOD |
+| Many parameters | UI responsiveness | Debounced updates (100-200ms) |
+| Library loading | Initial load time | Lazy loading, caching |
+
+#### Compatibility
+
+- **OpenSCAD Version:** MakerWorld tracks development builds; official release is 2021
+- **Feature Parity:** Some desktop features may not work in WASM
+- **Font Support:** Limited to bundled fonts in browser environment
+- **File Size:** Large WASM module (~20-30MB with libraries)
+
+#### Security
+
+- Scripts run in sandboxed Web Worker
+- No filesystem access outside virtual FS
+- No network access from WASM context
+- Consider script validation for uploaded files
+
+### Open Questions
+
+- [ ] Should 3DesignLab support `.scad` authoring, or only import/export?
+- [ ] How to handle OpenSCAD models that exceed browser performance limits?
+- [ ] Should we support the newer Manifold backend exclusively?
+- [ ] How to reconcile B-rep (3DesignLab) vs CSG (OpenSCAD) mental models?
+- [ ] What subset of BOSL2 is essential vs nice-to-have?
+
+### References
+
+- [MakerWorld Parametric Model Maker](https://makerworld.com/makerlab/parametricModelMaker)
+- [OpenSCAD WASM GitHub](https://github.com/openscad/openscad-wasm)
+- [OpenSCAD Playground](https://github.com/openscad/openscad-playground)
+- [BOSL2 Library](https://github.com/BelfrySCAD/BOSL2)
+- [Web OpenSCAD Customizer](https://github.com/vector76/Web_OpenSCAD_Customizer)
+- [OpenSCAD User Manual - Customizer](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Customizer)
+- [MakerWorld v1.1.0 Announcement](https://forum.bambulab.com/t/parametric-model-maker-v1-1-0-major-ui-refresh/203564)
+- [Bambu Lab Parametric Model Maker Forum](https://forum.bambulab.com/t/parametic-model-maker/74935)
+- [All3DP: Parametric Model Maker Brings OpenSCAD to MakerWorld](https://all3dp.com/4/bambu-labs-parametric-model-maker-brings-openscad-to-makerworld/)
+
+---
+
 ## Appendix
 
 ### Related Projects/References
@@ -667,16 +1009,25 @@ Use this section to track ongoing decisions, learnings, and changes to the plan.
 - SnapFrames (existing generator example)
 - PlanterLab (existing generator example)
 - Fusion 360 (mental model reference)
+- MakerWorld Parametric Model Maker (browser-based OpenSCAD customizer reference)
+- OpenSCAD (script-based parametric CAD)
+- openscad-wasm (WebAssembly port for browser execution)
+- BOSL2 (comprehensive OpenSCAD library)
 
 ### Glossary
 
 | Term | Definition |
 |------|------------|
 | B-rep | Boundary representation - solid modeling technique |
-| Generator | Parametric model packaged for end-user configuration |
+| BOSL2 | Belfry OpenSCAD Library v2.0 - comprehensive library for OpenSCAD |
+| Checkpoint | Cached intermediate state for faster rebuilds |
+| CSG | Constructive Solid Geometry - modeling via boolean operations on primitives |
+| Customizer | OpenSCAD feature that generates UI from parameter annotations |
 | Dial | Exposed parameter with UI controls and guardrails |
 | Feature | Single operation in the parametric timeline |
-| Checkpoint | Cached intermediate state for faster rebuilds |
+| Generator | Parametric model packaged for end-user configuration |
+| OpenSCAD | Script-based parametric CAD tool using code to define 3D models |
+| WASM | WebAssembly - binary instruction format for browser-based execution |
 
 ---
 
