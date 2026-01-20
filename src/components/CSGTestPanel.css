@@ -1,0 +1,156 @@
+.csg-test-panel {
+  padding: 16px;
+  border-bottom: 1px solid #2d2d44;
+}
+
+.csg-test-panel h3 {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.csg-test-panel h4 {
+  margin: 12px 0 8px 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+}
+
+.init-button {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #4a9eff;
+  background: transparent;
+  color: #4a9eff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.init-button:hover:not(:disabled) {
+  background: #4a9eff;
+  color: #1a1a2e;
+}
+
+.init-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.test-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.test-buttons button {
+  padding: 8px 6px;
+  border: 1px solid #3d3d5c;
+  background: #252538;
+  color: #b0b0b0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+}
+
+.test-buttons button:hover:not(:disabled) {
+  background: #303045;
+  border-color: #4a4a6a;
+  color: #ffffff;
+}
+
+.test-buttons button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.csg-test-panel .clear-button {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ff6b6b;
+  background: transparent;
+  color: #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+}
+
+.csg-test-panel .clear-button:hover {
+  background: #ff6b6b;
+  color: #1a1a2e;
+}
+
+.results {
+  margin-top: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.result {
+  background: #252538;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.result.success {
+  border-left: 3px solid #51cf66;
+}
+
+.result.error {
+  border-left: 3px solid #ff6b6b;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.result-name {
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.result-status {
+  font-size: 14px;
+}
+
+.result-status.success {
+  color: #51cf66;
+}
+
+.result-status.error {
+  color: #ff6b6b;
+}
+
+.result-stat {
+  color: #888;
+  font-size: 10px;
+}
+
+.result-metric {
+  color: #4a9eff;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.result-error {
+  color: #ff6b6b;
+  font-size: 10px;
+  margin-top: 4px;
+  word-break: break-word;
+}

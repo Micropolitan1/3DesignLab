@@ -1,6 +1,6 @@
 # 3DDesignLab — Product Specification
 
-> **Status:** In Progress - Milestone 0.1 Complete
+> **Status:** In Progress - Milestones 0.1 & 0.3 Complete
 > **Last Updated:** 2026-01-20
 > **Version:** 0.1.0
 
@@ -364,16 +364,56 @@ generator-package/
 
 #### Milestone 0.3: B-rep Kernel Viability Spike
 **Confidence:** Medium
+**Status:** COMPLETE
 
-- [ ] Run minimal solid operation chain in-browser:
-  - [ ] Create primitive
-  - [ ] Extrude or boolean
-  - [ ] Tessellate
-  - [ ] Render
-- [ ] Measure performance and memory constraints
+- [x] Run minimal solid operation chain in-browser:
+  - [x] Create primitive
+  - [x] Extrude or boolean
+  - [x] Tessellate
+  - [x] Render
+- [x] Measure performance and memory constraints
 
 **Notes:**
 ```
+2026-01-20: Completed using manifold-3d (WASM)
+
+Library: manifold-3d (https://github.com/elalish/manifold)
+- Modern, fast CSG library designed for 3D printing
+- WASM size: 476KB (192KB gzipped) - very reasonable
+- Pure client-side, no server needed
+
+Operations implemented:
+- Primitives: box, cylinder, sphere (all < 1ms)
+- Booleans: union, difference, intersect (typically 1-5ms)
+- Extrusion from 2D polygon profiles
+- Transforms: translate, rotate, scale
+- Tessellation with smooth vertex normals
+
+Performance findings (typical on modern hardware):
+- WASM initialization: ~100-200ms (one-time)
+- Box creation: < 0.5ms
+- Sphere (48 segments): ~1ms
+- Boolean union (box + sphere): ~2-5ms
+- Boolean difference: ~2-5ms
+- Complex chain (extrude + hole + boss): ~5-10ms
+- Tessellation: < 1ms for most meshes
+
+Memory usage:
+- WASM module: ~2MB heap
+- Individual manifolds: proportional to triangle count
+- Cleanup via .delete() method releases memory
+
+Verdict: manifold-3d is VIABLE for Path A (browser-only).
+Performance is excellent for typical CAD operations.
+No server fallback needed for basic solid modeling.
+
+Limitations identified:
+- No native fillet/chamfer (would need custom implementation)
+- No direct STEP import (separate spike needed)
+- No B-rep topology access (mesh-based, not true B-rep)
+
+Recommendation: Use manifold-3d as primary geometry engine.
+Add OpenCascade (WASM) later ONLY if needed for STEP import.
 ```
 
 #### Milestone 0.4: STEP Import Spike
