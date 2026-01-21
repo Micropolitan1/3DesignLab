@@ -1,0 +1,342 @@
+/* Toolbar - Fusion 360 Light Theme Style */
+
+.toolbar {
+  display: flex;
+  align-items: stretch;
+  height: 90px;
+  min-height: 90px;
+  flex-shrink: 0;
+  background: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+  border-bottom: 1px solid #c0c0c0;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* File section - left side icons */
+.file-section {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 2px;
+  flex-shrink: 0;
+  background: #f0f0f0;
+  border-right: 1px solid #d0d0d0;
+}
+
+.file-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #555555;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.file-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #333333;
+}
+
+.file-btn .btn-icon {
+  font-size: 18px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 50px;
+  background: #c0c0c0;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* Category tabs - SOLID, SKETCH, MODIFY like Fusion 360 */
+.toolbar-categories {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 4px;
+  flex-shrink: 0;
+  border-right: 1px solid #d0d0d0;
+  background: #f0f0f0;
+}
+
+.category-tab {
+  padding: 8px 20px;
+  background: transparent;
+  border: none;
+  color: #666666;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+  text-align: left;
+}
+
+.category-tab:hover {
+  color: #333333;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.category-tab.active {
+  color: #0696d7;
+  background: rgba(6, 150, 215, 0.08);
+  border-left-color: #0696d7;
+}
+
+/* Tool ribbon - main tool area */
+.toolbar-ribbon {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  padding: 8px 16px;
+  gap: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #f5f5f5;
+}
+
+/* Hide scrollbar for cleaner look, but keep scrollable */
+.toolbar-ribbon::-webkit-scrollbar {
+  height: 4px;
+}
+
+.toolbar-ribbon::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toolbar-ribbon::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 2px;
+}
+
+.toolbar-ribbon::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Tool group - labeled section */
+.tool-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tool-group-label {
+  font-size: 10px;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 4px;
+  margin-bottom: 2px;
+}
+
+.tool-group-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+/* Toolbar button - base style */
+.toolbar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  min-width: 56px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #555555;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #333333;
+}
+
+.toolbar-btn:active:not(:disabled) {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Primary button style - cyan accent */
+.toolbar-btn.primary {
+  background: #0696d7;
+  border-color: #0696d7;
+  color: #ffffff;
+}
+
+.toolbar-btn.primary:hover:not(:disabled) {
+  background: #38abdf;
+  border-color: #38abdf;
+}
+
+/* Active/selected tool */
+.toolbar-btn.active {
+  background: rgba(6, 150, 215, 0.15);
+  border-color: rgba(6, 150, 215, 0.5);
+  color: #0696d7;
+}
+
+.toolbar-btn .btn-icon {
+  font-size: 20px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.toolbar-btn .btn-label {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Tool button in ribbon - larger with icon and label */
+.tool-btn {
+  min-width: 64px;
+  padding: 10px 8px;
+  flex-shrink: 0;
+}
+
+.tool-btn .btn-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.tool-btn .btn-label {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+}
+
+/* Create Sketch button - highlighted primary action */
+.create-sketch-btn {
+  background: #0696d7;
+  border-color: #0696d7;
+  color: #ffffff;
+}
+
+.create-sketch-btn:hover:not(:disabled) {
+  background: #38abdf;
+  border-color: #38abdf;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+
+@media (max-width: 1200px) {
+  .toolbar-ribbon {
+    gap: 16px;
+    padding: 8px 12px;
+  }
+
+  .toolbar-btn {
+    padding: 6px 8px;
+    min-width: 48px;
+  }
+
+  .tool-btn {
+    min-width: 56px;
+    padding: 8px 6px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .toolbar {
+    height: 80px;
+    min-height: 80px;
+  }
+
+  .toolbar-ribbon {
+    gap: 12px;
+    padding: 6px 8px;
+  }
+
+  .toolbar-btn {
+    padding: 5px 6px;
+    min-width: 44px;
+  }
+
+  .toolbar-btn .btn-icon {
+    font-size: 18px;
+  }
+
+  .toolbar-btn .btn-label {
+    font-size: 9px;
+  }
+
+  .tool-btn {
+    min-width: 48px;
+    padding: 6px 4px;
+  }
+
+  .tool-btn .btn-icon {
+    font-size: 20px;
+  }
+
+  .tool-btn .btn-label {
+    font-size: 10px;
+  }
+
+  .category-tab {
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .toolbar {
+    height: 70px;
+    min-height: 70px;
+  }
+
+  .toolbar-divider {
+    height: 40px;
+    margin: 0 4px;
+  }
+
+  .file-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+
+  .file-btn .btn-icon {
+    font-size: 16px;
+  }
+
+  /* Hide labels on very narrow screens */
+  .toolbar-btn .btn-label,
+  .tool-btn .btn-label {
+    display: none;
+  }
+
+  .toolbar-btn,
+  .tool-btn {
+    padding: 6px;
+    min-width: 36px;
+  }
+
+  .tool-group-label {
+    font-size: 9px;
+  }
+}

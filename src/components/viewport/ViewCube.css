@@ -1,0 +1,550 @@
+/* ViewCube - Fusion 360 Light Theme Style
+   3D orientation cube with compass ring */
+
+.viewcube-container {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 120px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 100;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+/* In sketch mode, position below the palette header area */
+.sketch-mode .viewcube-container {
+  top: 8px;
+  right: 8px;
+}
+
+/* Scale up slightly when hovering */
+.viewcube-container.hovering:not(.dragging) {
+  transform: scale(1.02);
+}
+
+/* Home button */
+.viewcube-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+  color: #666666;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.viewcube-home:hover {
+  background: #ffffff;
+  border-color: #0696d7;
+  color: #0696d7;
+}
+
+/* Cube wrapper for rotation */
+.viewcube-wrapper {
+  width: 80px;
+  height: 80px;
+  margin-top: 8px;
+  perspective: 400px;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+/* Show grabbing cursor during drag */
+.viewcube-wrapper.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+/* 3D Cube */
+.viewcube {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+}
+
+/* Cube face - light gradient like Fusion 360 */
+.viewcube-face {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #ffffff 0%, #e8e8e8 100%);
+  border: 1px solid #c0c0c0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  backface-visibility: visible;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.viewcube-face span {
+  font-size: 9px;
+  font-weight: 700;
+  color: #888888;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.viewcube-face:hover {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f0f0 100%);
+  border-color: #0696d7;
+}
+
+.viewcube-face:hover span {
+  color: #0696d7;
+  transform: scale(1.1);
+}
+
+/* Active state when clicking */
+.viewcube-face:active {
+  background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
+}
+
+.viewcube-face:active span {
+  transform: scale(0.95);
+}
+
+/* Face positions */
+.viewcube-face.front {
+  transform: translateZ(40px);
+}
+
+.viewcube-face.back {
+  transform: rotateY(180deg) translateZ(40px);
+}
+
+.viewcube-face.left {
+  transform: rotateY(-90deg) translateZ(40px);
+}
+
+.viewcube-face.right {
+  transform: rotateY(90deg) translateZ(40px);
+}
+
+.viewcube-face.top {
+  transform: rotateX(90deg) translateZ(40px);
+}
+
+.viewcube-face.bottom {
+  transform: rotateX(-90deg) translateZ(40px);
+}
+
+/* Cube corners for isometric clicks */
+.viewcube-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  pointer-events: auto;
+  background: transparent;
+  transition: background 0.15s ease;
+  border-radius: 50%;
+}
+
+.viewcube-corner:hover {
+  background: rgba(6, 150, 215, 0.4);
+}
+
+/* Corner positions */
+.corner-front-top-right { transform: translate3d(64px, -8px, 40px); }
+.corner-front-top-left { transform: translate3d(-8px, -8px, 40px); }
+.corner-front-bottom-right { transform: translate3d(64px, 72px, 40px); }
+.corner-front-bottom-left { transform: translate3d(-8px, 72px, 40px); }
+.corner-back-top-right { transform: translate3d(64px, -8px, -40px) rotateY(180deg); }
+.corner-back-top-left { transform: translate3d(-8px, -8px, -40px) rotateY(180deg); }
+.corner-back-bottom-right { transform: translate3d(64px, 72px, -40px) rotateY(180deg); }
+.corner-back-bottom-left { transform: translate3d(-8px, 72px, -40px) rotateY(180deg); }
+
+/* Cube edges */
+.viewcube-edge {
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.viewcube-edge:hover {
+  background: rgba(6, 150, 215, 0.3);
+}
+
+/* Edge positions */
+.edge-front-top { width: 60px; height: 10px; top: -5px; left: 10px; transform: translateZ(40px); }
+.edge-front-right { width: 10px; height: 60px; top: 10px; right: -5px; transform: translateZ(40px); }
+.edge-front-bottom { width: 60px; height: 10px; bottom: -5px; left: 10px; transform: translateZ(40px); }
+.edge-front-left { width: 10px; height: 60px; top: 10px; left: -5px; transform: translateZ(40px); }
+.edge-back-top { width: 60px; height: 10px; top: -5px; left: 10px; transform: rotateY(180deg) translateZ(40px); }
+.edge-back-right { width: 10px; height: 60px; top: 10px; right: -5px; transform: rotateY(180deg) translateZ(40px); }
+.edge-top-right { width: 10px; height: 60px; top: 10px; right: -5px; transform: rotateX(90deg) translateZ(40px); }
+.edge-top-left { width: 10px; height: 60px; top: 10px; left: -5px; transform: rotateX(90deg) translateZ(40px); }
+
+/* Compass ring */
+.viewcube-compass {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-top: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cardinal direction labels */
+.compass-label {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 600;
+  color: #888888;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.compass-label:hover {
+  color: #0696d7;
+  transform: scale(1.2);
+}
+
+.compass-label.north {
+  top: 8px;
+  color: #eb5555; /* Red for north */
+}
+
+.compass-label.north:hover {
+  color: #ff6b6b;
+}
+
+.compass-label.south {
+  bottom: 8px;
+}
+
+.compass-label.east {
+  right: 8px;
+}
+
+.compass-label.west {
+  left: 8px;
+}
+
+/* Compass ring circle */
+.compass-ring {
+  width: 70px;
+  height: 70px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  position: relative;
+  transition: transform 0.1s ease-out;
+}
+
+/* Disable transition during drag */
+.viewcube-container.dragging .compass-ring {
+  transition: none;
+}
+
+/* Compass needle */
+.compass-needle {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 2px;
+  height: 12px;
+  background: linear-gradient(to bottom, #eb5555 50%, #888888 50%);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+/* Drag overlay for visual feedback */
+.viewcube-drag-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: grabbing;
+  z-index: 99;
+  pointer-events: none;
+}
+
+/* Dragging state */
+.viewcube-container.dragging .viewcube-face {
+  background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
+  border-color: #0696d7;
+}
+
+.viewcube-container.dragging .viewcube-face span {
+  color: #0696d7;
+}
+
+.viewcube-container.dragging .compass-ring {
+  border-color: rgba(6, 150, 215, 0.3);
+}
+
+/* Axis indicator */
+.viewcube-axes {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.axis-indicator {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.axis-indicator:hover {
+  transform: scale(1.2);
+}
+
+.axis-indicator.x { color: #eb5555; }
+.axis-indicator.y { color: #87b340; }
+.axis-indicator.z { color: #0696d7; }
+
+/* Animation for view transitions */
+@keyframes viewcube-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(6, 150, 215, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(6, 150, 215, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(6, 150, 215, 0); }
+}
+
+.viewcube-face.animating {
+  animation: viewcube-pulse 0.4s ease-out;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+
+@media (max-width: 1200px) {
+  .viewcube-container {
+    top: 12px;
+    right: 12px;
+    width: 110px;
+    height: 130px;
+  }
+
+  .viewcube-wrapper {
+    width: 72px;
+    height: 72px;
+  }
+
+  .viewcube {
+    width: 72px;
+    height: 72px;
+  }
+
+  .viewcube-face {
+    width: 72px;
+    height: 72px;
+  }
+
+  .viewcube-face span {
+    font-size: 8px;
+  }
+
+  .viewcube-face.front { transform: translateZ(36px); }
+  .viewcube-face.back { transform: rotateY(180deg) translateZ(36px); }
+  .viewcube-face.left { transform: rotateY(-90deg) translateZ(36px); }
+  .viewcube-face.right { transform: rotateY(90deg) translateZ(36px); }
+  .viewcube-face.top { transform: rotateX(90deg) translateZ(36px); }
+  .viewcube-face.bottom { transform: rotateX(-90deg) translateZ(36px); }
+}
+
+@media (max-width: 1000px) {
+  .viewcube-container {
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: 120px;
+  }
+
+  .viewcube-home {
+    width: 24px;
+    height: 24px;
+  }
+
+  .viewcube-wrapper {
+    width: 64px;
+    height: 64px;
+    margin-top: 6px;
+  }
+
+  .viewcube {
+    width: 64px;
+    height: 64px;
+  }
+
+  .viewcube-face {
+    width: 64px;
+    height: 64px;
+  }
+
+  .viewcube-face span {
+    font-size: 7px;
+  }
+
+  .viewcube-face.front { transform: translateZ(32px); }
+  .viewcube-face.back { transform: rotateY(180deg) translateZ(32px); }
+  .viewcube-face.left { transform: rotateY(-90deg) translateZ(32px); }
+  .viewcube-face.right { transform: rotateY(90deg) translateZ(32px); }
+  .viewcube-face.top { transform: rotateX(90deg) translateZ(32px); }
+  .viewcube-face.bottom { transform: rotateX(-90deg) translateZ(32px); }
+
+  .viewcube-compass {
+    width: 90px;
+    height: 90px;
+    margin-top: -8px;
+  }
+
+  .compass-ring {
+    width: 60px;
+    height: 60px;
+  }
+
+  .compass-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 900px) {
+  .viewcube-container {
+    top: 8px;
+    right: 8px;
+    width: 90px;
+    height: 110px;
+  }
+
+  .viewcube-home {
+    width: 22px;
+    height: 22px;
+  }
+
+  .viewcube-wrapper {
+    width: 56px;
+    height: 56px;
+    margin-top: 4px;
+  }
+
+  .viewcube {
+    width: 56px;
+    height: 56px;
+  }
+
+  .viewcube-face {
+    width: 56px;
+    height: 56px;
+  }
+
+  .viewcube-face span {
+    font-size: 6px;
+  }
+
+  .viewcube-face.front { transform: translateZ(28px); }
+  .viewcube-face.back { transform: rotateY(180deg) translateZ(28px); }
+  .viewcube-face.left { transform: rotateY(-90deg) translateZ(28px); }
+  .viewcube-face.right { transform: rotateY(90deg) translateZ(28px); }
+  .viewcube-face.top { transform: rotateX(90deg) translateZ(28px); }
+  .viewcube-face.bottom { transform: rotateX(-90deg) translateZ(28px); }
+
+  .viewcube-compass {
+    width: 80px;
+    height: 80px;
+    margin-top: -6px;
+  }
+
+  .compass-ring {
+    width: 55px;
+    height: 55px;
+  }
+
+  .compass-label {
+    font-size: 8px;
+  }
+
+  /* Hide axes indicators on narrow screens */
+  .viewcube-axes {
+    display: none;
+  }
+
+  /* Hide corners and edges on small screens */
+  .viewcube-corner,
+  .viewcube-edge {
+    display: none;
+  }
+}
+
+/* Height-based responsive rules */
+@media (max-height: 600px) {
+  .viewcube-container {
+    transform: scale(0.9);
+    transform-origin: top right;
+  }
+}
+
+@media (max-height: 500px) {
+  .viewcube-container {
+    transform: scale(0.8);
+    transform-origin: top right;
+  }
+
+  /* Hide compass on very short viewports */
+  .viewcube-compass {
+    display: none;
+  }
+}
+
+@media (max-height: 400px) {
+  .viewcube-container {
+    transform: scale(0.7);
+    transform-origin: top right;
+  }
+}
+
+/* Touch device adjustments */
+@media (hover: none) and (pointer: coarse) {
+  .viewcube-wrapper {
+    cursor: default;
+  }
+
+  .compass-label {
+    padding: 6px 8px;
+  }
+
+  .viewcube-corner {
+    width: 24px;
+    height: 24px;
+  }
+
+  .viewcube-edge {
+    min-width: 14px;
+    min-height: 14px;
+  }
+}

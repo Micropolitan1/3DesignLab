@@ -8,9 +8,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: #e0e0e0;
-  background-color: #0f0f1a;
+  color-scheme: light;
+  color: #333333;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -33,12 +33,12 @@ body {
 
 a {
   font-weight: 500;
-  color: #4a9eff;
+  color: #0696d7;
   text-decoration: none;
 }
 
 a:hover {
-  color: #6db3ff;
+  color: #38abdf;
 }
 
 button {

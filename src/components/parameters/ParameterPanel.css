@@ -1,0 +1,123 @@
+/* ParameterPanel - Fusion 360 Light Theme Style */
+
+.parameter-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Fill ResizablePanel parent */
+  height: 100%;
+  background: #f5f5f5;
+  border-left: 1px solid #c0c0c0;
+  user-select: none;
+}
+
+.parameter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #e8e8e8;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.parameter-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666666;
+  letter-spacing: 0.5px;
+}
+
+.feature-type-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  background: #f0f0f0;
+  color: #888888;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #d0d0d0;
+}
+
+.parameter-content {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.parameter-feature-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.parameter-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: #888888;
+  font-size: 12px;
+}
+
+.parameter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.parameter-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #d0d0d0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-sketch-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0696d7;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.edit-sketch-btn:hover {
+  background: #38abdf;
+}
+
+/* Parameter footer */
+.parameter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 8px;
+  gap: 4px;
+  background: #e8e8e8;
+  border-top: 1px solid #c0c0c0;
+}
+
+.parameter-action {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #666666;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.parameter-action:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #333333;
+}

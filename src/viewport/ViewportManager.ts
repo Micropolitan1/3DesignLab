@@ -60,13 +60,29 @@ export class ViewportManager {
       alpha: true,
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setClearColor(0x1a1a2e, 1);
+    // Fusion 360 light theme: light gray background
+    this.renderer.setClearColor(0xe0e0e0, 1);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(this.renderer.domElement);
 
-    // Create scene
+    // Create scene with Fusion 360 light theme gradient background
     this.scene = new THREE.Scene();
+    // Create gradient background: lighter at top (#e8e8e8) to slightly darker at bottom (#c8c8c8)
+    const canvas = document.createElement('canvas');
+    canvas.width = 2;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+      gradient.addColorStop(0, '#e8e8e8');   // Top - lighter gray
+      gradient.addColorStop(1, '#c8c8c8');   // Bottom - slightly darker
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 2, 512);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      this.scene.background = texture;
+    }
 
     // Create camera
     this.camera = new THREE.PerspectiveCamera(
@@ -145,12 +161,15 @@ export class ViewportManager {
     this.scene.add(fillLight);
 
     // Hemisphere light for ambient color variation
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.3);
+    // Light theme: brighter ground color to complement light background
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xd0d0d0, 0.4);
     this.scene.add(hemiLight);
   }
 
   private setupGrid(): void {
-    const grid = new THREE.GridHelper(20, 20, 0x444444, 0x333333);
+    // Fusion 360 light theme grid: subtle dark lines on light background
+    // Center lines (major) are slightly darker than grid lines (minor)
+    const grid = new THREE.GridHelper(20, 20, 0x999999, 0xb8b8b8);
     grid.position.y = -0.001; // Slightly below origin to avoid z-fighting
     this.scene.add(grid);
   }
@@ -373,6 +392,259 @@ export class ViewportManager {
 
   public getCamera(): THREE.PerspectiveCamera {
     return this.camera;
+  }
+
+  public getControls(): OrbitControls {
+    return this.controls;
+  }
+
+  /**
+   * Animate camera to a target position with smooth transition
+   * @param targetPosition - The target camera position
+   * @param duration - Animation duration in milliseconds
+   * @param onComplete - Callback when animation completes
+   */
+  public animateCameraTo(
+    targetPosition: THREE.Vector3,
+    duration: number = 500,
+    onComplete?: () => void
+  ): void {
+    const startPosition = this.camera.position.clone();
+    const startTime = performance.now();
+
+    // Calculate the target "up" vector to maintain consistent orientation
+    const targetUp = new THREE.Vector3(0, 1, 0);
+
+    // For top/bottom views, adjust the up vector
+    const normalizedTarget = targetPosition.clone().normalize();
+    if (Math.abs(normalizedTarget.y) > 0.99) {
+      // Looking straight up or down - use Z as reference for up
+      targetUp.set(0, 0, normalizedTarget.y > 0 ? -1 : 1);
+    }
+
+    const animate = () => {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease-out cubic for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      // Interpolate position using spherical interpolation for smooth orbit
+      const currentPos = new THREE.Vector3();
+
+      // Convert to spherical coordinates for smoother interpolation
+      const startSpherical = new THREE.Spherical().setFromVector3(startPosition);
+      const targetSpherical = new THREE.Spherical().setFromVector3(targetPosition);
+
+      // Interpolate spherical coordinates
+      const currentSpherical = new THREE.Spherical(
+        startSpherical.radius + (targetSpherical.radius - startSpherical.radius) * eased,
+        startSpherical.phi + this.shortestAngleDiff(startSpherical.phi, targetSpherical.phi) * eased,
+        startSpherical.theta + this.shortestAngleDiff(startSpherical.theta, targetSpherical.theta) * eased
+      );
+
+      currentPos.setFromSpherical(currentSpherical);
+
+      this.camera.position.copy(currentPos);
+      this.camera.lookAt(this.controls.target);
+
+      // Smoothly interpolate up vector
+      this.camera.up.lerp(targetUp, eased);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // Ensure final position is exact
+        this.camera.position.copy(targetPosition);
+        this.camera.lookAt(this.controls.target);
+        this.camera.up.copy(targetUp);
+        this.controls.update();
+        onComplete?.();
+      }
+    };
+
+    animate();
+  }
+
+  /**
+   * Calculate the shortest angle difference for smooth rotation
+   */
+  private shortestAngleDiff(from: number, to: number): number {
+    const diff = to - from;
+    const twoPi = Math.PI * 2;
+
+    // Normalize to [-PI, PI]
+    let normalized = ((diff + Math.PI) % twoPi) - Math.PI;
+    if (normalized < -Math.PI) normalized += twoPi;
+
+    return normalized;
+  }
+
+  /**
+   * Orbit the camera by delta angles (used by ViewCube drag)
+   * @param deltaTheta - Horizontal rotation in radians
+   * @param deltaPhi - Vertical rotation in radians
+   */
+  public orbitCamera(deltaTheta: number, deltaPhi: number): void {
+    const spherical = new THREE.Spherical().setFromVector3(
+      this.camera.position.clone().sub(this.controls.target)
+    );
+
+    // Apply horizontal rotation
+    spherical.theta -= deltaTheta;
+
+    // Apply vertical rotation with constraints to avoid flipping
+    const minPhi = 0.05; // Just above 0 (looking straight down)
+    const maxPhi = Math.PI - 0.05; // Just below PI (looking straight up)
+    spherical.phi = Math.max(minPhi, Math.min(maxPhi, spherical.phi - deltaPhi));
+
+    // Convert back to Cartesian and update camera
+    const newPosition = new THREE.Vector3().setFromSpherical(spherical);
+    newPosition.add(this.controls.target);
+
+    this.camera.position.copy(newPosition);
+    this.camera.lookAt(this.controls.target);
+
+    // Keep up vector pointing up (unless at extreme angles)
+    if (spherical.phi > 0.1 && spherical.phi < Math.PI - 0.1) {
+      this.camera.up.set(0, 1, 0);
+    }
+  }
+
+  /**
+   * Temporarily disable OrbitControls (used during ViewCube drag)
+   */
+  public setControlsEnabled(enabled: boolean): void {
+    this.controls.enabled = enabled;
+  }
+
+  /**
+   * Programmatically zoom the camera (used when sketch overlay intercepts wheel events)
+   * @param delta - Positive values zoom in, negative values zoom out
+   */
+  public zoom(delta: number): void {
+    const zoomSpeed = 0.1;
+    const direction = this.camera.position.clone().sub(this.controls.target).normalize();
+    const distance = this.camera.position.distanceTo(this.controls.target);
+
+    // Calculate new distance with zoom
+    const newDistance = distance * (1 - delta * zoomSpeed);
+
+    // Clamp to min/max distance
+    const clampedDistance = Math.max(this.controls.minDistance, Math.min(this.controls.maxDistance, newDistance));
+
+    // Update camera position
+    this.camera.position.copy(this.controls.target).add(direction.multiplyScalar(clampedDistance));
+  }
+
+  /**
+   * Orient camera to look perpendicular to a sketch plane (like Fusion 360)
+   * @param planeType - The type of plane ('XY', 'XZ', 'YZ', or 'face')
+   * @param planeOrigin - The origin point of the plane
+   * @param planeNormal - For face/custom planes, the normal vector
+   * @param animate - Whether to animate the transition (default true)
+   */
+  public setViewForSketchPlane(
+    planeType: 'XY' | 'XZ' | 'YZ' | 'face',
+    planeOrigin: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 },
+    planeNormal?: { x: number; y: number; z: number },
+    animate: boolean = true
+  ): void {
+    // Calculate distance based on current camera distance from target
+    const currentDistance = this.camera.position.distanceTo(this.controls.target);
+    const distance = Math.max(currentDistance, 10); // Minimum 10 units for good viewing
+
+    let cameraDirection: THREE.Vector3;
+    let upVector: THREE.Vector3;
+
+    switch (planeType) {
+      case 'XY':
+        // Look down the Z axis (from +Z toward origin)
+        cameraDirection = new THREE.Vector3(0, 0, 1);
+        upVector = new THREE.Vector3(0, 1, 0);
+        break;
+      case 'XZ':
+        // Look down the Y axis (from +Y toward origin)
+        cameraDirection = new THREE.Vector3(0, 1, 0);
+        upVector = new THREE.Vector3(0, 0, -1); // Z points down in this view
+        break;
+      case 'YZ':
+        // Look down the X axis (from +X toward origin)
+        cameraDirection = new THREE.Vector3(1, 0, 0);
+        upVector = new THREE.Vector3(0, 1, 0);
+        break;
+      case 'face':
+        // For face-based sketches, use the provided normal
+        if (planeNormal) {
+          cameraDirection = new THREE.Vector3(planeNormal.x, planeNormal.y, planeNormal.z).normalize();
+          // Calculate appropriate up vector
+          if (Math.abs(cameraDirection.y) > 0.99) {
+            upVector = new THREE.Vector3(0, 0, cameraDirection.y > 0 ? -1 : 1);
+          } else {
+            upVector = new THREE.Vector3(0, 1, 0);
+          }
+        } else {
+          // Default to XY plane if no normal provided
+          cameraDirection = new THREE.Vector3(0, 0, 1);
+          upVector = new THREE.Vector3(0, 1, 0);
+        }
+        break;
+    }
+
+    // Set the orbit target to the plane origin
+    const newTarget = new THREE.Vector3(planeOrigin.x, planeOrigin.y, planeOrigin.z);
+
+    // Calculate new camera position
+    const newPosition = newTarget.clone().add(cameraDirection.multiplyScalar(distance));
+
+    if (animate) {
+      // Animate to new position
+      const startPosition = this.camera.position.clone();
+      const startTarget = this.controls.target.clone();
+      const startUp = this.camera.up.clone();
+      const startTime = performance.now();
+      const duration = 400; // ms
+
+      const animateView = () => {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        // Interpolate position
+        this.camera.position.lerpVectors(startPosition, newPosition, eased);
+
+        // Interpolate target
+        this.controls.target.lerpVectors(startTarget, newTarget, eased);
+
+        // Interpolate up vector
+        this.camera.up.lerpVectors(startUp, upVector, eased).normalize();
+
+        // Look at target
+        this.camera.lookAt(this.controls.target);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateView);
+        } else {
+          // Ensure final state is exact
+          this.camera.position.copy(newPosition);
+          this.controls.target.copy(newTarget);
+          this.camera.up.copy(upVector);
+          this.camera.lookAt(this.controls.target);
+          this.controls.update();
+        }
+      };
+
+      animateView();
+    } else {
+      // Immediate transition
+      this.camera.position.copy(newPosition);
+      this.controls.target.copy(newTarget);
+      this.camera.up.copy(upVector);
+      this.camera.lookAt(this.controls.target);
+      this.controls.update();
+    }
   }
 
   private handleResize(): void {

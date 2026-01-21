@@ -1,0 +1,377 @@
+/* SketchToolbar - Fusion 360 Light Theme Sketch Mode Toolbar
+   Matches the toolbar layout from Fusion 360's sketch editing mode */
+
+.sketch-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #f5f5f5 0%, #ebebeb 100%);
+  border-bottom: 1px solid #c0c0c0;
+  gap: 4px;
+  z-index: 100;
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Hide scrollbar for cleaner look */
+.sketch-toolbar::-webkit-scrollbar {
+  height: 3px;
+}
+
+.sketch-toolbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sketch-toolbar::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 2px;
+}
+
+/* Section Container */
+.sketch-toolbar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Section Title - Small uppercase label like "SKETCH" and "EDIT" */
+.sketch-toolbar-title {
+  font-size: 10px;
+  font-weight: 400;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+/* Section Separator */
+.sketch-toolbar-divider {
+  width: 1px;
+  height: 36px;
+  background: #c0c0c0;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* Tool Buttons Container */
+.sketch-tool-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+/* Individual Tool Button - Fusion 360 style with icon above label */
+.sketch-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  min-width: 48px;
+  height: 38px;
+  flex-shrink: 0;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: #555555;
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: background-color 0.1s, border-color 0.1s;
+  gap: 2px;
+}
+
+.sketch-tool-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-color: #d0d0d0;
+  color: #333333;
+}
+
+/* Active/selected tool - cyan highlight like Fusion 360 */
+.sketch-tool-btn.active {
+  background-color: rgba(6, 150, 215, 0.15);
+  border-color: #0696d7;
+  color: #0696d7;
+}
+
+.sketch-tool-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Tool Icon */
+.tool-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  width: 18px;
+}
+
+.tool-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Tool Label - Small text under icon */
+.tool-label {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  color: #666666;
+}
+
+.sketch-tool-btn:hover .tool-label {
+  color: #333333;
+}
+
+.sketch-tool-btn.active .tool-label {
+  color: #0696d7;
+}
+
+/* Action Buttons (Edit section) */
+.sketch-action-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.sketch-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 8px;
+  min-width: 50px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: #555555;
+  font-size: 9px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.sketch-action-btn:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-color: #d0d0d0;
+  color: #333333;
+}
+
+.sketch-action-btn.active {
+  background-color: rgba(6, 150, 215, 0.15);
+  border-color: #0696d7;
+  color: #0696d7;
+}
+
+.sketch-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sketch-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sketch-action-btn span {
+  font-size: 9px;
+  color: #666666;
+}
+
+.sketch-action-btn:hover:not(:disabled) span {
+  color: #333333;
+}
+
+/* Spacer to push finish buttons to the right */
+.sketch-toolbar-spacer {
+  flex: 1;
+}
+
+/* Hint/Tooltip for current tool */
+.sketch-toolbar-hint {
+  font-size: var(--text-xs);
+  color: #666666;
+  background: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #d0d0d0;
+  max-width: 300px;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Finish Buttons Container */
+.sketch-finish-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+/* Finish Sketch Button - Cyan/Teal like Fusion 360 */
+.sketch-finish-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+/* Primary Finish Button - Cyan like Fusion 360's "Finish Sketch" */
+.sketch-finish-btn.primary {
+  background-color: #0696d7;
+  border: 1px solid #0696d7;
+  color: #ffffff;
+}
+
+.sketch-finish-btn.primary:hover {
+  background-color: #0585c2;
+  border-color: #0585c2;
+}
+
+.sketch-finish-btn.primary svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Cancel Button - Secondary style */
+.sketch-finish-btn.secondary {
+  background-color: transparent;
+  border: 1px solid #c0c0c0;
+  color: #333333;
+}
+
+.sketch-finish-btn.secondary:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-color: #a0a0a0;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+
+@media (max-width: 1200px) {
+  .sketch-toolbar {
+    gap: 2px;
+    padding: 0 8px;
+  }
+
+  .sketch-toolbar-section {
+    padding: 0 4px;
+  }
+
+  .sketch-tool-btn {
+    min-width: 42px;
+    padding: 3px 6px;
+  }
+
+  .sketch-toolbar-hint {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .sketch-toolbar {
+    height: 48px;
+    min-height: 48px;
+  }
+
+  .sketch-tool-btn {
+    min-width: 38px;
+    height: 34px;
+  }
+
+  .tool-icon,
+  .tool-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tool-label {
+    font-size: 8px;
+  }
+
+  .sketch-action-btn {
+    min-width: 44px;
+    height: 34px;
+    padding: 3px 6px;
+  }
+
+  .sketch-toolbar-hint {
+    max-width: 150px;
+    padding: 3px 8px;
+  }
+
+  .sketch-finish-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sketch-toolbar {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  /* Hide section titles on narrow screens */
+  .sketch-toolbar-title {
+    display: none;
+  }
+
+  .sketch-toolbar-divider {
+    height: 28px;
+  }
+
+  .sketch-tool-btn {
+    min-width: 32px;
+    height: 30px;
+    padding: 2px;
+  }
+
+  /* Hide tool labels on narrow screens */
+  .tool-label {
+    display: none;
+  }
+
+  .sketch-action-btn span {
+    display: none;
+  }
+
+  .sketch-action-btn {
+    min-width: 32px;
+    height: 30px;
+    padding: 2px;
+  }
+
+  .sketch-toolbar-hint {
+    display: none;
+  }
+
+  .sketch-finish-btn {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  .sketch-finish-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+}

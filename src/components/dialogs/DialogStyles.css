@@ -1,0 +1,405 @@
+/* Dialog Styles - Fusion 360 Light Theme Style
+   Matches the "Edit Extrude" dialog design from Fusion 360 */
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Main dialog container - clean white like Fusion 360 */
+.dialog {
+  background: #ffffff;
+  border-radius: 6px;
+  min-width: 380px;
+  max-width: 480px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border: 1px solid #d0d0d0;
+}
+
+/* Dialog Header - clean with title and close button */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #888888;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-close:hover {
+  color: #333333;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Dialog Body */
+.dialog-body {
+  padding: 20px;
+}
+
+.dialog-message {
+  text-align: center;
+  color: #666666;
+  line-height: 1.6;
+  padding: 16px 0;
+  font-size: 13px;
+}
+
+/* Dialog Field - Fusion 360 style with uppercase labels */
+.dialog-field {
+  margin-bottom: 16px;
+}
+
+.dialog-field:last-child {
+  margin-bottom: 0;
+}
+
+/* Uppercase section labels like "SKETCH", "DISTANCE", "DIRECTION", "MODE" */
+.dialog-field label {
+  display: block;
+  font-size: 11px;
+  color: #666666;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+}
+
+/* Full-width input fields and dropdowns */
+.dialog-field input,
+.dialog-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #333333;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.dialog-field input:hover,
+.dialog-field select:hover {
+  border-color: #a0a0a0;
+}
+
+.dialog-field input:focus,
+.dialog-field select:focus {
+  border-color: #0696d7;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(6, 150, 215, 0.15);
+}
+
+/* Dropdown select - custom arrow */
+.dialog-field select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666666' d='M3 4l3 4 3-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Input with unit suffix - like "50 mm" */
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-with-unit input {
+  flex: 1;
+}
+
+.input-with-unit .unit {
+  font-size: 13px;
+  color: #666666;
+  flex-shrink: 0;
+}
+
+/* Dialog Footer with buttons */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 20px;
+  background: #f8f8f8;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Dialog buttons */
+.dialog-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* Primary button - gray/dark like Fusion 360's "Update" button */
+.dialog-btn.primary {
+  background: #666666;
+  color: #ffffff;
+  border: 1px solid #666666;
+}
+
+.dialog-btn.primary:hover:not(:disabled) {
+  background: #555555;
+  border-color: #555555;
+}
+
+.dialog-btn.primary:disabled {
+  background: #c0c0c0;
+  border-color: #c0c0c0;
+  color: #888888;
+  cursor: not-allowed;
+}
+
+/* Secondary button - outlined "Cancel" style */
+.dialog-btn.secondary {
+  background: #ffffff;
+  color: #333333;
+  border: 1px solid #c0c0c0;
+}
+
+.dialog-btn.secondary:hover {
+  background: #f5f5f5;
+  border-color: #a0a0a0;
+}
+
+/* Blue accent button variant */
+.dialog-btn.accent {
+  background: #0696d7;
+  color: #ffffff;
+  border: 1px solid #0696d7;
+}
+
+.dialog-btn.accent:hover:not(:disabled) {
+  background: #0585c2;
+  border-color: #0585c2;
+}
+
+/* Operation buttons (for Boolean dialog) */
+.operation-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.operation-btn {
+  flex: 1;
+  padding: 12px 12px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  color: #666666;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.operation-btn:hover {
+  background: #f5f5f5;
+  border-color: #c0c0c0;
+  color: #333333;
+}
+
+.operation-btn.active {
+  background: rgba(6, 150, 215, 0.1);
+  border-color: #0696d7;
+  color: #0696d7;
+}
+
+/* Operation preview box */
+.operation-preview {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+}
+
+.preview-description {
+  font-size: 12px;
+  color: #666666;
+  line-height: 1.5;
+}
+
+/* Direction toggle buttons */
+.direction-toggle {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.direction-btn {
+  flex: 1;
+  padding: 8px 10px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  color: #666666;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.direction-btn:hover {
+  background: #f5f5f5;
+  border-color: #c0c0c0;
+  color: #333333;
+}
+
+.direction-btn.active {
+  background: rgba(6, 150, 215, 0.1);
+  border-color: #0696d7;
+  color: #0696d7;
+}
+
+/* Checkbox in dialogs */
+.dialog-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.dialog-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.dialog-checkbox .checkbox-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #c0c0c0;
+  border-radius: 2px;
+  background: #ffffff;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.1s;
+}
+
+.dialog-checkbox:hover .checkbox-box {
+  border-color: #a0a0a0;
+}
+
+.dialog-checkbox input[type="checkbox"]:checked + .checkbox-box {
+  background: #0696d7;
+  border-color: #0696d7;
+}
+
+.dialog-checkbox input[type="checkbox"]:checked + .checkbox-box::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dialog-checkbox span:last-child {
+  font-size: 13px;
+  color: #333333;
+}
+
+/* Slider input */
+.dialog-slider {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.dialog-slider input[type="range"] {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #e0e0e0;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.dialog-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0696d7;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-slider input[type="range"]::-webkit-slider-thumb:hover {
+  background: #0585c2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .dialog {
+    min-width: 320px;
+    max-width: 95vw;
+    margin: 16px;
+  }
+
+  .dialog-header {
+    padding: 12px 16px;
+  }
+
+  .dialog-header h2 {
+    font-size: 14px;
+  }
+
+  .dialog-body {
+    padding: 16px;
+  }
+
+  .dialog-footer {
+    padding: 12px 16px;
+  }
+
+  .dialog-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}

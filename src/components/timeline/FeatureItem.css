@@ -1,0 +1,92 @@
+/* FeatureItem styles */
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #3a3a3a;
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+
+.feature-item:hover {
+  background-color: #3a3a3a;
+}
+
+.feature-item.selected {
+  background-color: #0d4f8c;
+}
+
+.feature-item.selected:hover {
+  background-color: #1565c0;
+}
+
+.feature-item.suppressed {
+  opacity: 0.5;
+}
+
+.feature-item.suppressed .feature-name {
+  text-decoration: line-through;
+}
+
+.feature-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.feature-name {
+  flex: 1;
+  font-size: 13px;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feature-name-input {
+  flex: 1;
+  font-size: 13px;
+  padding: 2px 6px;
+  border: 1px solid #0d4f8c;
+  border-radius: 3px;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  outline: none;
+}
+
+.feature-status {
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.feature-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.feature-item:hover .feature-actions {
+  opacity: 1;
+}
+
+.feature-action-btn {
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+}
+
+.feature-action-btn:hover {
+  background-color: #4a4a4a;
+}
+
+.feature-action-btn.delete:hover {
+  background-color: #c62828;
+}

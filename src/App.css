@@ -1,13 +1,385 @@
-.app {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background: #0f0f1a;
+/* 3DDesignLab - Fusion 360 Authentic Style
+   Based on Autodesk Weave Design System - LIGHT Theme */
+
+:root {
+  /* === SURFACE BACKGROUNDS (Fusion 360 Light Theme) === */
+  --bg-darkest: #ffffff;           /* Deepest background - white */
+  --bg-darker: #f5f5f5;            /* Secondary panels - light gray */
+  --bg-dark: #e8e8e8;              /* Main window background */
+  --bg-medium: #f0f0f0;            /* Toolbar/panel background */
+  --bg-light: #e5e5e5;             /* Elevated panels, modals */
+
+  /* Legacy aliases for compatibility */
+  --bg-deep: #ffffff;
+  --bg-panel: #f5f5f5;
+  --bg-surface-1: #e8e8e8;
+  --bg-surface-2: #f0f0f0;
+  --bg-surface-3: #e5e5e5;
+  --bg-hover: rgba(0, 0, 0, 0.08);
+  --bg-active: rgba(0, 0, 0, 0.12);
+
+  /* === VIEWPORT === */
+  /* Fusion 360 light theme: gradient from #e8e8e8 (top) to #c8c8c8 (bottom) */
+  --viewport-bg: #d8d8d8;          /* Fallback light gray viewport in 3D mode */
+  --viewport-bg-sketch: #1a2f4a;   /* Dark navy blue for sketch mode - matches Fusion 360 */
+
+  /* === TEXT COLORS (Dark text on light background) === */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #888888;
+  --text-disabled: #aaaaaa;
+  --text-on-accent: #ffffff;
+  --text-link: #0696d7;
+
+  /* === BORDERS === */
+  --border-light: #d0d0d0;
+  --border-medium: #c0c0c0;
+  --border-heavy: #a0a0a0;
+  --border-divider: #d0d0d0;
+  --border-input-default: #c0c0c0;
+  --border-input-focus: #0696d7;
+  --border-input-hover: #888888;
+
+  /* Legacy aliases */
+  --border-dark: #d0d0d0;
+  --border-subtle: #e0e0e0;
+  --border-default: #c0c0c0;
+  --border-strong: #a0a0a0;
+  --border-focus: #0696d7;
+
+  /* === ACCENT COLORS (Autodesk Brand) === */
+  --accent-primary: #0696d7;       /* Main accent (focus, active) - Fusion 360 cyan */
+  --accent-primary-solid: #0696d7; /* Solid accent buttons */
+  --accent-primary-light: rgba(6, 150, 215, 0.15);  /* Selection backgrounds */
+  --accent-primary-border: rgba(6, 150, 215, 0.5);  /* Active borders */
+  --accent-hover: #38abdf;
+  --accent-active: #0585c2;
+  --accent-canvas: #0696d7;        /* Canvas border highlight */
+
+  /* Finish Sketch button - Cyan/Teal like Fusion 360 */
+  --finish-sketch-bg: #0696d7;
+  --finish-sketch-hover: #0585c2;
+
+  /* Legacy aliases */
+  --selection-bg: #0696d7;
+  --selection-text: #ffffff;
+
+  /* === STATUS COLORS === */
+  --status-error: #eb5555;
+  --status-warning: #fbb549;
+  --status-success: #87b340;
+  --status-info: #0696d7;
+
+  /* Legacy aliases */
+  --accent-success: #87b340;
+  --accent-warning: #fbb549;
+  --accent-danger: #eb5555;
+  --accent-info: #0696d7;
+  --accent-yellow: #fbb549;
+
+  /* === INPUT FIELDS === */
+  --input-bg: #ffffff;
+  --input-bg-solid: #ffffff;
+
+  /* === SKETCH MODE SPECIFIC === */
+  --sketch-bg: #1a2f4a;               /* Dark navy blue background */
+  --sketch-grid-color: rgba(6, 150, 215, 0.2);  /* Cyan grid lines */
+  --sketch-grid-major: rgba(6, 150, 215, 0.25);
+  --sketch-grid-minor: rgba(6, 150, 215, 0.1);
+
+  --sketch-primary: #0696d7;
+  --sketch-secondary: #38abdf;
+  --sketch-unconstrained: #3e9fff;     /* Blue - under-constrained */
+  --sketch-constrained: #ffffff;       /* White - fully constrained on dark bg */
+  --sketch-construction: #ff8c00;      /* Orange - construction lines */
+  --sketch-reference: #808080;         /* Gray - reference/projected */
+  --sketch-selected: #ff6b00;          /* Orange - selected geometry */
+  --sketch-hover: #0696d7;             /* Cyan - hover highlight */
+  --sketch-profile-fill: rgba(6, 150, 215, 0.25);
+  --sketch-profile-fill-selected: rgba(255, 107, 0, 0.35);
+
+  /* Dimension box */
+  --dimension-bg: #0696d7;
+  --dimension-border: #38abdf;
+  --dimension-text: #ffffff;
+
+  /* Origin axes */
+  --sketch-origin-x: #eb5555;          /* Red - X axis */
+  --sketch-origin-y: #87b340;          /* Green - Y axis */
+  --sketch-origin-z: #0696d7;          /* Blue - Z axis */
+
+  /* Constraints */
+  --constraint-icon-color: #87b340;
+
+  /* === TOOLTIP === */
+  --tooltip-bg: #333333;
+  --tooltip-text: #ffffff;
+
+  /* === SHADOWS (lighter for light theme) === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-panel: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-dark: rgba(0, 0, 0, 0.2);
+
+  /* === BORDER RADIUS === */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+
+  /* === SPACING === */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 20px;
+
+  /* === TYPOGRAPHY === */
+  --font-family: "Artifakt Element", "Open Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 12px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+
+  /* === SCROLLBAR === */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.4);
 }
 
+/* Main app container */
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  min-width: 800px;
+  min-height: 500px;
+  overflow: hidden;
+  background: var(--bg-darkest);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Main content area (below toolbar) */
+.main-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Center area (viewport + timeline) */
+.center-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Viewport container - Fusion 360 3D view background */
 .viewport-container {
   flex: 1;
-  height: 100%;
+  min-height: 200px;
   position: relative;
+  background: var(--viewport-bg);
+  overflow: hidden;
+}
+
+/* Sketch mode - dark navy background */
+.viewport-container.sketch-mode {
+  background: var(--sketch-bg);
+}
+
+/* Grid overlay for viewport - only in non-sketch mode */
+.viewport-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 1;
+}
+
+/* Hide default grid in sketch mode (sketch has its own grid) */
+.viewport-container.sketch-mode::before {
+  display: none;
+}
+
+/* Sketch mode overlay */
+.sketch-mode-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.sketch-mode-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #0696d7 0%, #38abdf 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px var(--shadow-dark);
+}
+
+.sketch-mode-banner span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sketch-mode-banner button {
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sketch-mode-banner button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.sketch-mode-banner button.primary {
+  background: var(--status-success);
+  border-color: var(--status-success);
+}
+
+.sketch-mode-banner button.primary:hover {
+  background: #6a9728;
+  border-color: #6a9728;
+}
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg-darker);
+}
+
+/* Selection highlight - Autodesk Blue */
+::selection {
+  background: rgba(6, 150, 215, 0.35);
+  color: var(--text-primary);
+}
+
+/* Button reset */
+button {
+  font-family: inherit;
+}
+
+/* Tooltip styles */
+[title] {
+  position: relative;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Keyboard shortcuts hint */
+.kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-family: monospace;
+  background: var(--bg-light);
+  border: 1px solid var(--border-medium);
+  border-radius: 3px;
+  color: var(--text-muted);
+}
+
+/* === RESPONSIVE BREAKPOINTS === */
+
+/* Smaller screens - collapse less essential elements */
+@media (max-width: 1200px) {
+  .sketch-mode-banner {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .sketch-mode-banner button {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+}
+
+/* Compact layout for narrow windows */
+@media (max-width: 1000px) {
+  .app {
+    min-width: 700px;
+  }
+
+  .sketch-mode-banner span {
+    font-size: 11px;
+    gap: 6px;
+  }
+}
+
+/* Very small viewport fallback */
+@media (max-width: 800px) {
+  .app {
+    min-width: 600px;
+  }
+
+  .sketch-mode-banner {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
+/* Short viewport handling */
+@media (max-height: 600px) {
+  .viewport-container {
+    min-height: 150px;
+  }
 }

@@ -1,0 +1,146 @@
+/* ResizablePanel - Draggable edge panel like Fusion 360 */
+
+.resizable-panel {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  transition: width 0.15s ease-out;
+  overflow: hidden;
+}
+
+.resizable-panel.resizing {
+  transition: none; /* Disable transition during drag */
+}
+
+.resizable-panel.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+/* Panel content wrapper */
+.resizable-panel-content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.resizable-panel.collapsed .resizable-panel-content {
+  display: none;
+}
+
+/* Resize handle - the draggable edge */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Handle position based on panel side */
+.resize-handle-left {
+  right: -3px;
+}
+
+.resize-handle-right {
+  left: -3px;
+}
+
+/* Visual indicator line */
+.resize-handle-indicator {
+  width: 2px;
+  height: 40px;
+  max-height: 50%;
+  background: transparent;
+  border-radius: 2px;
+  transition: background-color 0.15s, height 0.15s;
+}
+
+.resize-handle:hover .resize-handle-indicator {
+  background: var(--accent-primary, #0696d7);
+  height: 60px;
+}
+
+.resizable-panel.resizing .resize-handle-indicator {
+  background: var(--accent-primary, #0696d7);
+  height: 100%;
+  max-height: 100%;
+}
+
+/* Hover highlight zone */
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: transparent;
+  transition: background-color 0.15s;
+}
+
+.resize-handle:hover::before {
+  background: rgba(6, 150, 215, 0.1);
+}
+
+/* Expand button when panel is collapsed */
+.panel-expand-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 60px;
+  background: var(--bg-medium, #f0f0f0);
+  border: 1px solid var(--border-light, #d0d0d0);
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 101;
+  transition: all 0.15s;
+}
+
+.panel-expand-btn:hover {
+  background: var(--accent-primary, #0696d7);
+  color: white;
+  border-color: var(--accent-primary, #0696d7);
+}
+
+.panel-expand-left {
+  right: -20px;
+  border-radius: 0 4px 4px 0;
+  border-left: none;
+}
+
+.panel-expand-right {
+  left: -20px;
+  border-radius: 4px 0 0 4px;
+  border-right: none;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 1000px) {
+  .resize-handle {
+    width: 8px; /* Slightly larger touch target */
+  }
+
+  .panel-expand-btn {
+    width: 24px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .resize-handle-indicator {
+    display: none; /* Hide indicator on small screens */
+  }
+}
